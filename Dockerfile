@@ -55,7 +55,7 @@ RUN apt-get update \
 
 # 2. Install OpenAI Whisper globally or in a specific path
 # Note: This installs the base Whisper library via pip
-RUN pip3 install --no-cache-dir -U openai-whisper
+RUN pip3 install --no-cache-dir -U openai-whisper --break-system-packages
 
 # `openclaw update` expects pnpm. Provide it in the runtime image.
 RUN corepack enable && corepack prepare pnpm@10.23.0 --activate
