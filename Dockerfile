@@ -48,8 +48,14 @@ RUN apt-get update \
     ca-certificates \
     tini \
     python3 \
+    python3-pip \
     python3-venv \
+    ffmpeg \
   && rm -rf /var/lib/apt/lists/*
+
+# 2. Install OpenAI Whisper globally or in a specific path
+# Note: This installs the base Whisper library via pip
+RUN pip3 install --no-cache-dir -U openai-whisper
 
 # `openclaw update` expects pnpm. Provide it in the runtime image.
 RUN corepack enable && corepack prepare pnpm@10.23.0 --activate
