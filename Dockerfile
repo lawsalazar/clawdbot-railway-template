@@ -87,10 +87,6 @@ RUN curl -L https://github.com/steipete/gogcli/releases/download/v0.12.0/gogcli_
     && chmod +x /usr/local/bin/gog \
     && rm -f /tmp/gog.tar.gz
 
-# 2. Add the OpenClaw Skill for gog
-# (This "bakes" the logic into the image so it survives redeploys)
-RUN openclaw skills add gog
-
 COPY src ./src
 
 # The wrapper listens on $PORT.
