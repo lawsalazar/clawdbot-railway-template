@@ -53,18 +53,6 @@ RUN apt-get update \
     ffmpeg \
   && rm -rf /var/lib/apt/lists/*
 
-# --- INSERT THIS AFTER THE apt-get install SECTION ---
-
-# 1. Download and install gogcli (The engine for Google Sheets/Calendar)
-RUN curl -L https://github.com/steipete/gogcli/releases/download/v0.12.0/gogcli_0.12.0_linux_amd64.tar.gz -o /tmp/gog.tar.gz \
-    && tar -xzf /tmp/gog.tar.gz -C /usr/local/bin gog \
-    && chmod +x /usr/local/bin/gog \
-    && rm -f /tmp/gog.tar.gz
-
-# 2. Add the OpenClaw Skill for gog
-# (This "bakes" the logic into the image so it survives redeploys)
-RUN openclaw skills add gog
-
 # 3. Install OpenAI Whisper globally or in a specific path
 # Note: This installs the base Whisper library via pip
 RUN pip3 install --no-cache-dir -U openai-whisper --break-system-packages
@@ -93,6 +81,15 @@ COPY --from=openclaw-build /openclaw /openclaw
 # Provide an openclaw executable
 RUN printf '%s\n' '#!/usr/bin/env bash' 'exec node /openclaw/dist/entry.js "$@"' > /usr/local/bin/openclaw \
   && chmod +x /usr/local/bin/openclaw
+
+RUN curl -L https://github.com/steipete/gogcli/releases/download/v0.12.0/gogcli_0.12.0_linux_amd64.tar.gz -o /tmp/gog.tar.gz \
+    && tar -xzf /tmp/gog.tar.gz -C /usr/local/bin gog \
+    && chmod +x /usr/local/bin/gog \
+    && rm -f /tmp/gog.tar.gz
+
+# 2. Add the OpenClaw Skill for gog
+# (This "bakes" the logic into the image so it survives redeploys)
+RUN openclaw skills add gog
 
 COPY src ./src
 
