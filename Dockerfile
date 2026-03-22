@@ -55,7 +55,7 @@ RUN apt-get update \
 
 # 3. Install OpenAI Whisper globally or in a specific path
 # Note: This installs the base Whisper library via pip
-RUN pip3 install --no-cache-dir -U openai-whisper --break-system-packages
+RUN pip3 install --no-cache-dir -U faster-whisper --break-system-packages
 
 # `openclaw update` expects pnpm. Provide it in the runtime image.
 RUN corepack enable && corepack prepare pnpm@10.23.0 --activate
@@ -94,7 +94,10 @@ COPY src ./src
 # Railway injects PORT at runtime and routes traffic to that port.
 # If we force a different port, deployments can come up but the domain will route elsewhere.
 EXPOSE 8080
+# Persist aliases for interactive shells
 
+RUN echo "[ -f /data/.bash_aliases ] && . /data/.bash_aliases" >> /root/.bashrc
 # Ensure PID 1 reaps zombies and forwards signals.
+
 ENTRYPOINT ["tini", "--"]
 CMD ["node", "src/server.js"]
